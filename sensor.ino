@@ -1,42 +1,31 @@
-#define pino_sinal_analogico A1
-#define pino_led_vermelho 12
-#define pino_led_amarelo 13
- 
-int valor_analogico;
- 
-void setup()
-{
+#define pinSensorA A0
+#define pinSensorD 8
+
+void setup() {
+  pinMode(pinSensorD, INPUT);
   Serial.begin(9600);
-  pinMode(pino_sinal_analogico, INPUT);
-  pinMode(pino_led_vermelho, OUTPUT);
-  pinMode(pino_led_amarelo, OUTPUT);
 }
- 
-void loop()
-{
-  valor_analogico = analogRead(pino_sinal_analogico);
- 
-  Serial.print("Porta analogica: ");
-  Serial.print(valor_analogico);
- 
-  if (valor_analogico > 0 && valor_analogico <= 512)
-  {
-    Serial.println(" Status: Solo umido");
-    apagaleds();
-    digitalWrite(pino_led_amarelo, HIGH);
+
+void loop() {
+  Serial.print("Digital:");
+  
+  if (digitalRead(pinSensorD)) {
+     Serial.print("SEM UMIDADE ");
+  } else {
+     Serial.print("COM UMIDADE ");
   }
- 
-  if (valor_analogico > 512 && valor_analogico < 1024)
-  {
-    Serial.println(" Status: Solo seco");
-    apagaleds();
-    digitalWrite(pino_led_vermelho, HIGH);
+
+  Serial.print("  Analogico:");
+  Serial.print(analogRead(pinSensorA)); 
+  Serial.print("  ");
+
+  Serial.print("  Atuador:");
+  if (analogRead(pinSensorA) > 700) {
+     Serial.println("SOLENOIDE LIGADO");
+     //digitalWrite(pinSolenoide, HIGH);
+  } else {
+    Serial.println("SOLENOIDE DESLIGADO");
+     //digitalWrite(pinSolenoide, LOW);
   }
-  delay(100);
 }
- 
-void apagaleds()
-{
-  digitalWrite(pino_led_vermelho, LOW);
-  digitalWrite(pino_led_amarelo, LOW);
-}
+
